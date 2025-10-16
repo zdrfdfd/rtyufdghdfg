@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>元气充电助手</title>
+  <style>
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(to bottom right, #ffecd2, #fcb69f);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      box-sizing: border-box;
+    }
+    h1 {
+      text-align: center;
+      color: #ff6b6b;
+      margin-top: 0;
+      font-size: 2em;
+    }
+    .avatar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .avatar span {
+      font-size: 4em;
+      display: block;
+    }
+    .status {
+      background-color: #ffeaa7;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: center;
+      font-size: 1.1em;
+      color: #e17055;
+    }
+    .progress-container {
+      margin: 20px 0;
+    }
+    .progress-bar {
+      height: 20px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    .task-section {
+      margin: 20px 0;
+    }
+    .task-input {
+      width: calc(100% - 80px);
+      padding: 12px;
+      border: 2px solid #ff9a9e;
+      border-radius: 10px;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+    .add-btn {
+      width: 70px;
+      padding: 12px;
+      margin-left: 10px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .add-btn:hover {
+      background-color: #ff5252;
+    }
+    .tasks {
+      margin-top: 20px;
+    }
+    .task-item {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #ff9a9e;
+    }
+    .task-text {
+      flex-grow: 1;
+    }
+    .complete-btn {
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .complete-btn:hover {
+      background-color: #00a085;
+    }
+    .achievements {
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 2px dashed #ff9a9e;
+    }
+    .achievement-title {
+      text-align: center;
+      color: #e17055;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .achievement-item {
+      background-color: #e1f5fe;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #0277bd;
+    }
+    .achievement-unlocked {
+      background-color: #d1f2eb;
+      color: #16a085;
+      font-weight: bold;
+    }
+    .motivational-message {
+      text-align: center;
+      font-size: 1.2em;
+      margin-top: 20px;
+      color: #e17055;
+      font-style: italic;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .stat-item {
+      background-color: #fdedec;
+      padding: 10px;
+      border-radius: 10px;
+      flex: 1;
+      margin: 0 5px;
+    }
+    .stat-number {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #ff6b6b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>元气充电助手</h1>
+    <div class="avatar">
+      <span>☀️</span>
+      <p>Hi！我是你的元气充电助手小阳！</p>
+    </div>
+    <div class="status">
+      <p>今日元气值: <span id="energy-value">20</span>/100</p>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="energy-progress" style="width: 20%;"></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number" id="completed-tasks">0</div>
+        <div>已完成任务</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="streak-days">0</div>
+        <div>连续打卡天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="total-stars">0</div>
+        <div>获得星星</div>
+      </div>
+    </div>
+    <div class="task-section">
+      <input type="text" class="task-input" id="new-task" placeholder="输入一个积极小任务，比如：喝一杯水，做10个俯卧撑...">
+      <button class="add-btn" id="add-task-btn">添加</button>
+    </div>
+    <div class="tasks" id="tasks-container">
+      <!-- Tasks will be added here dynamically -->
+    </div>
+    <div class="achievements">
+      <div class="achievement-title">我的成就</div>
+      <div class="achievement-item achievement-unlocked">🌟 初来乍到 (完成1个任务)</div>
+      <div class="achievement-item" id="ach-2">🏃‍♂️ 活力达人 (完成5个任务)</div>
+      <div class="achievement-item" id="ach-3">💪 元气满满 (连续打卡3天)</div>
+      <div class="achievement-item" id="ach-4">⭐ 星光璀璨 (获得10颗星星)</div>
+      <div class="achievement-item" id="ach-5">🏆 全能助手 (解锁全部成就)</div>
+    </div>
+    <div class="motivational-message" id="motivation">
+      每一个小小的行动，都在为更强大的自己充电！加油，你可以的！
+    </div>
+  </div>
+
+  <script>
+    // 初始化数据
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let completedTasksCount = parseInt(localStorage.getItem('completedTasksCount')) || 0;
+    let streakDays = parseInt(localStorage.getItem('streakDays')) || 0;
+    let totalStars = parseInt(localStorage.getItem('totalStars')) || 0;
+    let energyValue = parseInt(localStorage.getItem('energyValue')) || 20;
+    let lastCompletedDate = localStorage.getItem('lastCompletedDate') || '';
+
+    const today = new Date().toISOString().split('T')[0];
+    if (lastCompletedDate !== today) {
+      streakDays = 0;
+    }
+
+    // 更新UI
+    function updateUI() {
+      document.getElementById('energy-value').textContent = energyValue;
+      document.getElementById('energy-progress').style.width = energyValue + '%';
+      document.getElementById('completed-tasks').textContent = completedTasksCount;
+      document.getElementById('streak-days').textContent = streakDays;
+      document.getElementById('total-stars').textContent = totalStars;
+
+      // 更新任务列表
+      const container = document.getElementById('tasks-container');
+      container.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task-item';
+        taskElement.innerHTML = `
+          <div class="task-text">${task.text}</div>
+          <button class="complete-btn" data-index="${index}">完成 (+10元气)</button>
+        `;
+        container.appendChild(taskElement);
+      });
+
+      // 添加完成按钮事件
+      document.querySelectorAll('.complete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          completeTask(index);
+        });
+      });
+
+      // 更新成就
+      updateAchievements();
+    }
+
+    // 完成任务
+    function completeTask(index) {
+      if (index < 0 || index >= tasks.length) return;
+
+      // 增加能量值
+      energyValue += 10;
+      if (energyValue > 100) energyValue = 100;
+
+      // 增加统计数据
+      completedTasksCount++;
+      totalStars++;
+
+      // 检查是否是今天第一次完成任务，以更新连续天数
+      const today = new Date().toISOString().split('T')[0];
+      if (lastCompletedDate !== today) {
+        streakDays++;
+        lastCompletedDate = today;
+      }
+
+      // 移除已完成的任务
+      tasks.splice(index, 1);
+
+      // 保存到本地存储
+      saveData();
+
+      // 更新UI
+      updateUI();
+    }
+
+    // 添加任务
+    document.getElementById('add-task-btn').addEventListener('click', function() {
+      const input = document.getElementById('new-task');
+      const text = input.value.trim();
+      if (text) {
+        tasks.push({ text: text });
+        input.value = '';
+        saveData();
+        updateUI();
+      }
+    });
+
+    document.getElementById('new-task').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('add-task-btn').click();
+      }
+    });
+
+    // 更新成就
+    function updateAchievements() {
+      if (completedTasksCount >= 5) {
+        document.getElementById('ach-2').classList.add('achievement-unlocked');
+      }
+      if (streakDays >= 3) {
+        document.getElementById('ach-3').classList.add('achievement-unlocked');
+      }
+      if (totalStars >= 10) {
+        document.getElementById('ach-4').classList.add('achievement-unlocked');
+      }
+      if (completedTasksCount >= 5 && streakDays >= 3 && totalStars >= 10) {
+         document.getElementById('ach-5').classList.add('achievement-unlocked');
+      }
+    }
+
+    // 保存数据到本地存储
+    function saveData() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      localStorage.setItem('completedTasksCount', completedTasksCount.toString());
+      localStorage.setItem('streakDays', streakDays.toString());
+      localStorage.setItem('totalStars', totalStars.toString());
+      localStorage.setItem('energyValue', energyValue.toString());
+      localStorage.setItem('lastCompletedDate', lastCompletedDate);
+    }
+
+    // 页面加载时初始化
+    window.onload = function() {
+      updateUI();
+    };
+  </script>
+</body>
+</html>
+
+
+
